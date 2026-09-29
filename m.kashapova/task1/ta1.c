@@ -39,7 +39,6 @@ int parse_number(const char *str, long *value)
     return 1;
 }
 
-
 void print_ids(void)
 {
     printf("Real UID: %d\n", (int)getuid());
@@ -55,7 +54,6 @@ void print_process_ids(void)
     printf("PPID: %d\n", (int)getppid());
     printf("PGID: %d\n", (int)getpgrp());
 }
-
 int make_group_leader(void)
 {
     if (setpgid(0, 0) == -1)
@@ -122,7 +120,6 @@ int change_ulimit(const char *str)
     return 1;
 }
 
-
 int print_core_size(void)
 {
     struct rlimit limit;
@@ -145,6 +142,7 @@ int print_core_size(void)
 
     return 1;
 }
+
 
 int change_core_size(const char *str)
 {
@@ -176,6 +174,7 @@ int change_core_size(const char *str)
     return 1;
 }
 
+
 int print_directory(void)
 {
     char cwd[PATH_MAX];
@@ -188,7 +187,7 @@ int print_directory(void)
 
     printf("Current directory: %s\n", cwd);
 
-    return 1
+    return 1;
 }
 
 void print_environment(void)
@@ -234,6 +233,7 @@ int change_environment(const char *argument)
         return 0;
     }
 
+
     *equal = '\0';
 
     if (copy[0] == '\0')
@@ -244,7 +244,7 @@ int change_environment(const char *argument)
         return 0;
     }
 
-  
+    
     if (setenv(copy, equal + 1, 1) == -1)
     {
         perror("setenv");
@@ -263,7 +263,19 @@ int change_environment(const char *argument)
 int main(int argc, char *argv[])
 {
     int opt;
-
+    if (argc == 1){
+   	 printf("Input command:\n"
+	"-i  Печатает реальные и эффективные идентификаторы пользователя и группы.\n"
+	"-s  Процесс становится лидером группы. Подсказка: смотри setpgid(2).\n"
+	"-p  Печатает идентификаторы процесса, процесса-родителя и группы процессов.\n"
+	"-u  Печатает значение ulimit\n"
+	"-Unew_ulimit  Изменяет значение ulimit. Подсказка: смотри atol(3C) на странице руководства strtol(3C)\n"
+	"-c  Печатает размер в байтах core-файла, который может быть создан.\n"
+	"-Csize  Изменяет размер core-файла\n"
+	"-d  Печатает текущую рабочую директорию\n"
+	"-v  Распечатывает переменные среды и их значения\n"
+	"-Vname=value  Вносит новую переменную в среду или изменяет значение существующей переменной.\n");
+    }
     while ((opt = getopt(argc, argv, "ispuU:cC:dvV:")) != -1)
     {
         switch (opt)
@@ -300,7 +312,7 @@ int main(int argc, char *argv[])
                 }
 
                 break;
-			
+                        
             case 'c':
                 if (!print_core_size())
                 {
@@ -355,3 +367,4 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+
